@@ -1,0 +1,22 @@
+{
+  "admin_server": {
+    "host": "192.168.1.100",
+    "port": 8765,
+    "reconnect_interval": 5
+  },
+  "participant": {
+    "id": "",
+    "name": "",
+    "exam_session_id": ""
+  },
+  "monitoring": {
+    "process_check_interval": 2.0,
+    "camera_check_interval": 1.0,
+    "audio_check_interval": 0.5
+  },
+  "ui": {
+    "show_taskbar": false,
+    "minimize_to_tray": true,
+    "exam_interface_enabled": true
+  }
+}

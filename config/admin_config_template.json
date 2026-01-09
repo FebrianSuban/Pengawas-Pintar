@@ -1,0 +1,61 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8765,
+    "enable_websocket": true
+  },
+  "ai_proctoring": {
+    "enabled": true,
+    "auto_mode": false,
+    "camera": {
+      "enabled": true,
+      "face_absence_threshold": 5.0,
+      "multiple_face_threshold": 0.5,
+      "suspicious_movement_threshold": 3.0
+    },
+    "audio": {
+      "enabled": true,
+      "voice_activity_threshold": 0.3,
+      "multiple_speaker_threshold": 0.4
+    },
+    "warning": {
+      "text_enabled": true,
+      "voice_enabled": true,
+      "language": "id",
+      "tone": "formal"
+    },
+    "escalation": {
+      "warnings_before_flag": 3,
+      "warnings_before_lock": 5,
+      "flag_duration_minutes": 5
+    }
+  },
+  "exam_rules": {
+    "allowed_applications": [
+      "notepad.exe",
+      "calc.exe"
+    ],
+    "blocked_applications": [
+      "taskmgr.exe",
+      "cmd.exe",
+      "powershell.exe",
+      "chrome.exe",
+      "firefox.exe",
+      "msedge.exe"
+    ],
+    "allowed_websites": [],
+    "block_screen_switching": true,
+    "block_shortcuts": true
+  },
+  "permissions": {
+    "leave_seat_enabled": true,
+    "max_leave_duration_minutes": 10,
+    "auto_approve": false
+  },
+  "logging": {
+    "capture_screenshots": true,
+    "capture_video": true,
+    "video_duration_seconds": 10,
+    "evidence_retention_days": 30
+  }
+}
