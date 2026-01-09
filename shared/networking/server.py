@@ -80,8 +80,8 @@ class ProctoringServer:
                         participant_name = participant.name
                         participant_session_id = participant.exam_session_id
                         
-                        # Validasi nama
-                        if name and participant_name.lower() != name.lower():
+                        # Validasi nama (normalisasi spasi & huruf)
+                        if name and participant_name.strip().lower() != name.strip().lower():
                             return {"valid": False, "message": f"Nama tidak sesuai. Nama yang terdaftar: {participant_name}"}
                         
                         # Validasi sesi ujian aktif

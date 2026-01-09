@@ -26,7 +26,9 @@ class DatabaseManager:
         
         self.db_path = db_path
         self.engine = create_engine(f'sqlite:///{db_path}', echo=False)
-        self.SessionLocal = sessionmaker(bind=self.engine)
+        # Prevent SQLAlchemy from expiring ORM objects on commit so returned
+        # instances remain usable after the session context closes.
+        self.SessionLocal = sessionmaker(bind=self.engine, expire_on_commit=False)
         
         # Create tables
         Base.metadata.create_all(self.engine)

@@ -376,7 +376,7 @@ class AdminApp(QMainWindow):
     async def _handle_register_async(self, participant_id: str, message: Message):
         """Handle participant registration dengan validasi"""
         data = message.data
-        name = data.get('name', '').strip()
+        name = data.get('name', '')
         
         # Validasi: cek apakah ID dan nama sesuai dengan yang didaftarkan
         participant = self.db_manager.get_participant(participant_id)
@@ -394,8 +394,8 @@ class AdminApp(QMainWindow):
             await self.server.send_message(participant_id, ack_message)
             return
         
-        # Validasi nama
-        if participant.name.lower() != name.lower():
+        # Validasi nama (normalisasi spasi & case)
+        if participant.name.strip().lower() != name.strip().lower():
             ack_message = Message(
                 MessageType.REGISTER_ACK,
                 data={
@@ -420,15 +420,18 @@ class AdminApp(QMainWindow):
             await self.server.send_message(participant_id, ack_message)
             return
         
-        # Update participant info dengan computer info
+        # Update participant info dengan computer info (gunakan session aktif)
         computer_ip = data.get('computer_ip', '')
         computer_name = data.get('computer_name', '')
         with self.db_manager.get_session() as session:
-            participant.computer_ip = computer_ip
-            participant.computer_name = computer_name
-            participant.is_active = True
-            participant.last_heartbeat = datetime.utcnow()
-            session.add(participant)
+            from shared.database.models import Participant as _Participant
+            p = session.query(_Participant).filter_by(participant_id=participant_id).first()
+            if p:
+                p.computer_ip = computer_ip
+                p.computer_name = computer_name
+                p.is_active = True
+                p.last_heartbeat = datetime.utcnow()
+                session.add(p)
         
         # Send acknowledgment
         ack_message = Message(
