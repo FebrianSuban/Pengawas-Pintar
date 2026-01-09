@@ -80,20 +80,20 @@ class ProctoringServer:
                         participant_name = participant.name
                         participant_session_id = participant.exam_session_id
                         
-                        # Validasi nama (normalisasi spasi & huruf)
-                        if name and participant_name.strip().lower() != name.strip().lower():
-                            return {"valid": False, "message": f"Nama tidak sesuai. Nama yang terdaftar: {participant_name}"}
-                        
-                        # Validasi sesi ujian aktif
+                        # Validasi sesi ujian aktif DULU (jangan sampai error message-nya membingungkan)
                         if not self.admin_app.current_session_id:
-                            return {"valid": False, "message": "Sesi ujian belum dimulai oleh pengawas."}
+                            return {"valid": False, "message": "❌ Sesi ujian belum dimulai oleh pengawas. Minta pengawas untuk mulai sesi."}
                         
                         if participant_session_id != self.admin_app.current_session_id:
-                            return {"valid": False, "message": "ID Peserta tidak terdaftar untuk sesi ujian ini."}
+                            return {"valid": False, "message": "❌ ID Peserta tidak terdaftar untuk sesi ujian ini."}
+                        
+                        # Validasi nama (normalisasi spasi & huruf)
+                        if name and participant_name.strip().lower() != name.strip().lower():
+                            return {"valid": False, "message": f"❌ Nama tidak sesuai. Nama yang terdaftar: '{participant_name}' tapi Anda input: '{name}'"}
                         
                         return {"valid": True, "participant": {"id": participant_id, "name": participant_name}}
-                    return {"valid": False, "message": f"ID Peserta {participant_id} tidak terdaftar"}
-            return {"valid": False, "message": "Server belum siap"}
+                    return {"valid": False, "message": f"❌ ID Peserta '{participant_id}' tidak terdaftar di database"}
+            return {"valid": False, "message": "❌ Server belum siap. Hubungi pengawas."}
         
         @self.app.websocket("/ws/{participant_id}")
         async def websocket_endpoint(websocket: WebSocket, participant_id: str):
